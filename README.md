@@ -1,0 +1,4 @@
+slideIt
+=======
+
+jQuery slideshow plugin
