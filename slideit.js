@@ -8,7 +8,8 @@
 			auto: true,
 			slideAreaClass: "body",
 			activeClass: "active",
-			notActiveClass : "notActive"
+			notActiveClass : "notActive",
+			slideEffect : "slide"
 		};
 
 		var opts = $.extend(defaults, options);
@@ -41,34 +42,118 @@
 		//********** RENDER FUNCTIONS ********//
 
 		var animations = {
-			slideNext: function (current, next, callback) {
-		        //place ready for animation
-		        var slideLength = (slideArea.width() - containerWidth / 2);
-		        var startPos = slideLength + containerWidth;
+			animateSlide : function(current, next, startPos, effect, direction, callback){
+				if(effect == "slideAndFade"){
+					next.css({"opacity" : 0});
+				}
+				
+				var directionChar = '-';
+				if(!direction){
+					var directionChar = '+'; 
+				}
 
-		        next.css("left", (startPos + "px"));
-		        next.css("opacity", "0");
-		        next.show();
-
-		        //animate
-		        $.when(
+				$.when(
 		            $.Deferred(function (dfd) {
-		                current.animate({
-		                    //translateX: '-=' + startPos,  
-		                    left: '-=' + startPos,
-		                    opacity: 0
-		                }, opts.speed, dfd.resolve);
+		            	switch(effect){
+		            		case "slideAndFade": 
+		            			current.animate({
+				                    left: directionChar + '=' + startPos,
+				                    opacity: 0
+				                }, opts.speed, dfd.resolve);		
+		            		break;
+		            		case "slide":
+		            			current.animate({
+				                    left: directionChar + '=' + startPos
+				                }, opts.speed, dfd.resolve);
+		            		break;
+		            			current.animate({
+				                    left: directionChar + '=' + startPos
+				                }, opts.speed, dfd.resolve);
+				                break;
+		            		default:
+		            	}
+		                
 		            }).promise(),
 
 		            $.Deferred(function (dfd) {
-		                next.animate({
-		                    //translateX: '-=' + startPos, 
-		                    left: '-=' + startPos,
-		                    opacity: 1
-		                }, opts.speed, dfd.resolve);
+		                switch(effect){
+		            		case "slideAndFade": 
+		            			next.animate({
+				                    left: directionChar + '=' + startPos,
+				                    opacity: 1
+				                }, opts.speed, dfd.resolve);		
+		            		break;
+		            		case "slide":
+		            			next.animate({
+				                    left: directionChar + '=' + startPos
+				                }, opts.speed, dfd.resolve);
+		            		break;
+		            			next.animate({
+				                    left: directionChar + '=' + startPos
+				                }, opts.speed, dfd.resolve);
+				                break;
+		            		default:
+		            	}
 		            }).promise()
 
 		        ).then(callback);
+			},
+
+			slideNext: function (current, next, callback) {
+		        //place ready for animation
+		        var sideLength = (slideArea.width() - containerWidth / 2);
+		        var startPos = sideLength + containerWidth;
+
+		        next.css("left", (startPos + "px"));
+		        next.show();
+
+		        //animate
+		        animations.animateSlide(current, next, startPos, opts.slideEffect, true, callback);
+		        // $.when(
+		        //     $.Deferred(function (dfd) {
+		        //     	switch(slideEffect){
+		        //     		case "slideAndFade": 
+		        //     			current.animate({
+				      //               left: '-=' + startPos,
+				      //               opacity: 0
+				      //           }, opts.speed, dfd.resolve);		
+		        //     		break;
+		        //     		case "slide":
+		        //     			current.animate({
+				      //               left: '-=' + startPos
+				      //           }, opts.speed, dfd.resolve);
+		        //     		break;
+		        //     			current.animate({
+				      //               left: '-=' + startPos
+				      //           }, opts.speed, dfd.resolve);
+				      //           break;
+		        //     		default:
+		        //     	}
+		                
+		        //     }).promise(),
+
+		        //     $.Deferred(function (dfd) {
+		        //         switch(slideEffect){
+		        //     		case "slideAndFade": 
+		        //     			next.animate({
+				      //               left: '-=' + startPos,
+				      //               opacity: 1
+				      //           }, opts.speed, dfd.resolve);		
+		        //     		break;
+		        //     		case "slide":
+		        //     			next.animate({
+				      //               left: '-=' + startPos
+				      //           }, opts.speed, dfd.resolve);
+		        //     		break;
+		        //     			next.animate({
+				      //               left: '-=' + startPos
+				      //           }, opts.speed, dfd.resolve);
+				      //           break;
+		        //     		default:
+		        //     	}
+		        //     }).promise()
+
+		        // ).then(callback);
 		    },
 		    slidePrev: function (current, prev, callback) {
 		        //place ready for animation
@@ -76,28 +161,40 @@
 		        var startPos = sideLength + containerWidth;
 
 		        prev.css("left", "-" + startPos + "px");
-		        prev.css("opacity", "0");
 		        prev.show();
 
 		        //animate
-		        $.when(
-		            $.Deferred(function (dfd) {
-		                current.animate({
-		                    left: '+=' + startPos,
-		                    //                    translateX: '+=' + startPos,
-		                    opacity: 0
-		                }, opts.speed, dfd.resolve);
-		            }).promise(),
+		        animations.animateSlide(current, prev, startPos, opts.slideEffect, false, callback);
+		        // $.when(
+		        //     $.Deferred(function (dfd) {
+		        //         switch(slideEffect){
+		        //     		case "slideAndFade": 
+		        //     			current.animate({
+				      //               left: '+=' + startPos,
+				      //               opacity: 0
+				      //           }, opts.speed, dfd.resolve);		
+		        //     		break;
+		        //     		case "slide":
+		        //     			current.animate({
+				      //               left: '+=' + startPos
+				      //           }, opts.speed, dfd.resolve);
+		        //     		break;
+		        //     			current.animate({
+				      //               left: '+=' + startPos
+				      //           }, opts.speed, dfd.resolve);
+				      //           break;
+		        //     		default:
+		        //     	}
+		        //     }).promise(),
 
-		            $.Deferred(function (dfd) {
-		                prev.animate({
-		                    left: '+=' + startPos,
-		                    //                    translateX: '+=' + startPos, 
-		                    opacity: 1
-		                }, opts.speed, dfd.resolve);
-		            }).promise()
+		        //     $.Deferred(function (dfd) {
+		        //         prev.animate({
+		        //             left: '+=' + startPos,
+		        //             opacity: 1
+		        //         }, opts.speed, dfd.resolve);
+		        //     }).promise()
 
-		        ).then(callback);
+		        // ).then(callback);
 		    },
 		    
 		    runSlideshowNext: function (callback) {
