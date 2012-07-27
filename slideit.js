@@ -109,51 +109,6 @@
 
 		        //animate
 		        animations.animateSlide(current, next, startPos, opts.slideEffect, true, callback);
-		        // $.when(
-		        //     $.Deferred(function (dfd) {
-		        //     	switch(slideEffect){
-		        //     		case "slideAndFade": 
-		        //     			current.animate({
-				      //               left: '-=' + startPos,
-				      //               opacity: 0
-				      //           }, opts.speed, dfd.resolve);		
-		        //     		break;
-		        //     		case "slide":
-		        //     			current.animate({
-				      //               left: '-=' + startPos
-				      //           }, opts.speed, dfd.resolve);
-		        //     		break;
-		        //     			current.animate({
-				      //               left: '-=' + startPos
-				      //           }, opts.speed, dfd.resolve);
-				      //           break;
-		        //     		default:
-		        //     	}
-		                
-		        //     }).promise(),
-
-		        //     $.Deferred(function (dfd) {
-		        //         switch(slideEffect){
-		        //     		case "slideAndFade": 
-		        //     			next.animate({
-				      //               left: '-=' + startPos,
-				      //               opacity: 1
-				      //           }, opts.speed, dfd.resolve);		
-		        //     		break;
-		        //     		case "slide":
-		        //     			next.animate({
-				      //               left: '-=' + startPos
-				      //           }, opts.speed, dfd.resolve);
-		        //     		break;
-		        //     			next.animate({
-				      //               left: '-=' + startPos
-				      //           }, opts.speed, dfd.resolve);
-				      //           break;
-		        //     		default:
-		        //     	}
-		        //     }).promise()
-
-		        // ).then(callback);
 		    },
 		    slidePrev: function (current, prev, callback) {
 		        //place ready for animation
@@ -165,36 +120,6 @@
 
 		        //animate
 		        animations.animateSlide(current, prev, startPos, opts.slideEffect, false, callback);
-		        // $.when(
-		        //     $.Deferred(function (dfd) {
-		        //         switch(slideEffect){
-		        //     		case "slideAndFade": 
-		        //     			current.animate({
-				      //               left: '+=' + startPos,
-				      //               opacity: 0
-				      //           }, opts.speed, dfd.resolve);		
-		        //     		break;
-		        //     		case "slide":
-		        //     			current.animate({
-				      //               left: '+=' + startPos
-				      //           }, opts.speed, dfd.resolve);
-		        //     		break;
-		        //     			current.animate({
-				      //               left: '+=' + startPos
-				      //           }, opts.speed, dfd.resolve);
-				      //           break;
-		        //     		default:
-		        //     	}
-		        //     }).promise(),
-
-		        //     $.Deferred(function (dfd) {
-		        //         prev.animate({
-		        //             left: '+=' + startPos,
-		        //             opacity: 1
-		        //         }, opts.speed, dfd.resolve);
-		        //     }).promise()
-
-		        // ).then(callback);
 		    },
 		    
 		    runSlideshowNext: function (callback) {
