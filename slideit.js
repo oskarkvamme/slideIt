@@ -6,7 +6,7 @@
 			speed: 700,
 			interval : 8000,
 			auto: true,
-			slideAreaClass: "body",
+			slideArea: $("body"),
 			activeClass: "active",
 			notActiveClass : "notActive",
 			slideEffect : "slide"
@@ -22,15 +22,6 @@
 		
 		var slideshowContainer = $(this);
 		var containerWidth = slideshowContainer.width();
-
-		var slideArea = {};
-		var slideAreaTmp = $(opts.slideAreaClass);
-
-		if(slideAreaTmp.length > 0){
-			slideArea = slideAreaTmp;
-		}else{
-			slideArea = $("." + opts.slideAreaClass);
-		}
 
 		var slideshowRunning = false;
 		var slideshowTimer = {};
@@ -101,7 +92,7 @@
 
 			slideNext: function (current, next, callback) {
 		        //place ready for animation
-		        var sideLength = (slideArea.width() - containerWidth / 2);
+		        var sideLength = (opts.slideArea.width() - containerWidth / 2);
 		        var startPos = sideLength + containerWidth;
 
 		        next.css("left", (startPos + "px"));
@@ -112,7 +103,7 @@
 		    },
 		    slidePrev: function (current, prev, callback) {
 		        //place ready for animation
-		        var sideLength = (slideArea.width() - containerWidth / 2);
+		        var sideLength = (opts.slideArea.width() - containerWidth / 2);
 		        var startPos = sideLength + containerWidth;
 
 		        prev.css("left", "-" + startPos + "px");
@@ -234,10 +225,10 @@
 				otherEl.hide();
 
 				//slide area style
-				slideArea.css("overflow", "hidden");
+				opts.slideArea.css("overflow-x", "hidden");
 
 				//reset style
-				$("html, body").css("overflow", "hidden");
+				//$("html, body").css("overflow-x", "hidden");
 
 				//start slide show
 				controlFunctions.start();	

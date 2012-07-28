@@ -1,6 +1,7 @@
 (function(namespace){
 	namespace.initSlideshow = function(){
-		$("#container").slideit();
+		$("#normalContainer").slideit({"slideArea" : $("#normalContainer")});
+		$("#wideContainer").slideit({"slideArea" : $("#wideContainer")});
 	};
 })(window.slideItDemo = window.slideItDemo || {});
 
