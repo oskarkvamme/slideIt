@@ -1,15 +1,15 @@
 html, body{
 	margin: 0;
 	padding: 0;
-	overflow-x: hidden;
 }
+
 h1, h2{
 	text-align: center;
 }
 
 #normalContainer{
 	width: 800px;
-	height: 800px;
+	height: 600px;
 	position: relative;
 	margin: 0 auto;
 }
@@ -27,4 +27,23 @@ h1, h2{
 #wideContainer div{
 	height: 100%;
 	width: 100%;
+}
+
+
+#tress{
+	width: 100%;
+	background-color: black;
+	height: 492px;
+}
+
+#tress .pageContainer{
+	position: relative;
+	width: 960px;
+	margin: 0 auto;
+}
+
+#tress .pageContainer .container{
+	width: 2036px;
+	position: absolute;
+	left: -538px;
 }

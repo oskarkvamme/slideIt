@@ -1,21 +1,5 @@
 ﻿(function($) {
 	$.fn.slideit = function(options) {
-		//********** SETTINGS ************//
-
-		var defaults = {
-			speed: 700,
-			interval : 8000,
-			auto: true,
-			slideArea: $("body"),
-			activeClass: "active",
-			notActiveClass : "notActive",
-			slideEffect : "slide"
-		};
-
-		var opts = $.extend(defaults, options);
-
-		//********** END SETTINGS ************//
-
 
 
 		//********** PRIVATE VARIABLES ********// 
@@ -27,6 +11,24 @@
 		var slideshowTimer = {};
 		
 		//********** END PRIVATE VARIABLES ********//
+
+
+
+		//********** SETTINGS ************//
+
+		var defaults = {
+			speed: 700,
+			interval : 8000,
+			auto: true,
+			slideArea: slideshowContainer,
+			activeClass: "active",
+			notActiveClass : "notActive",
+			slideEffect : "slide"
+		};
+
+		var opts = $.extend(defaults, options);
+
+		//********** END SETTINGS ************//
 
 
 
@@ -211,7 +213,9 @@
 				var otherEl = slideshowContainer.children("div").not(currentEl);
 
 				//slide show container styles
-				slideshowContainer.css("position", "relative");
+				if(slideshowContainer.css("position") == "static"){
+					slideshowContainer.css("position", "relative");
+				}
 
 				//set common style on all slides
 				allElements.css("position", "absolute");
@@ -219,16 +223,17 @@
 
 				//set active element
 				currentEl.addClass(opts.activeClass);
+				currentEl.css("left", 0);
 
 				//set inactive
 				otherEl.addClass(opts.notActiveClass);
 				otherEl.hide();
 
 				//slide area style
-				opts.slideArea.css("overflow-x", "hidden");
+				opts.slideArea.css("overflow", "hidden");
 
 				//reset style
-				//$("html, body").css("overflow-x", "hidden");
+				//$("html, body").css("overflow", "hidden");
 
 				//start slide show
 				controlFunctions.start();	
