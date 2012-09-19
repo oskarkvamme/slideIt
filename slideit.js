@@ -2,9 +2,12 @@
 	$.fn.slideit = function(options) {
 
 
-		//********** PRIVATE VARIABLES ********// 
+		//********** PRIVATE VARIABLES ********//
+		var plugin = this;
+
+		var el = $(this);
 		
-		var slideshowContainer = $(this);
+		var slideshowContainer = el;
 		var containerWidth = slideshowContainer.width();
 
 		var slideshowRunning = false;
@@ -18,7 +21,7 @@
 
 		var defaults = {
 			speed: 700,
-			interval : 8000,
+			interval : 4000,
 			auto: true,
 			slideArea: slideshowContainer,
 			activeClass: "active",
@@ -194,8 +197,21 @@
 		    			controlFunctions.start();
 		    		});
 		    	}, opts.interval);
+		    },
+
+		    stop : function(){
+		    	clearTimeout(slideshowTimer);
+		    },
+
+		    next : function(){
+		    	console.log("next");
+		    },
+
+		    prev : function(){
+				console.log("prev");
 		    }
 		};
+
 
 		//********** API FUNCTIONS ********//
 
@@ -236,7 +252,9 @@
 				//$("html, body").css("overflow", "hidden");
 
 				//start slide show
-				controlFunctions.start();	
+				if(opts.auto){
+					controlFunctions.start();	
+				}
 			}
 			
 		};
