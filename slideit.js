@@ -26,7 +26,9 @@
 			notActiveClass : "notActive",
 			slideEffect : "slide",
 			nextButton : {},
-			previousButton : {}
+			previousButton : {},
+			pagination: false,
+			paginationUl : {}
 		};
 
 		var opts = $.extend(defaults, options);
@@ -34,7 +36,7 @@
 		//********** END SETTINGS ************//
 
 
-		//********** RENDER FUNCTIONS ********//
+		//********** HELPERS ************//
 
 		var isEmpty = function (ob){
    			
@@ -43,6 +45,13 @@
    			}
 			return true;
 		};
+
+		//********** END HELPERS ************//
+
+
+		//********** RENDER FUNCTIONS ********//
+
+		
 
 		var animations = {
 			animateSlide : function(current, next, startPos, effect, direction, callback){
@@ -110,6 +119,8 @@
 		        next.css("left", (startPos + "px"));
 		        next.show();
 
+		        animations.setActivePagination(parseInt(next.attr("data-elIndex"), 10));
+
 		        //animate
 		        animations.animateSlide(current, next, startPos, opts.slideEffect, true, callback);
 		    },
@@ -120,6 +131,8 @@
 
 		        prev.css("left", "-" + startPos + "px");
 		        prev.show();
+
+		        animations.setActivePagination(parseInt(prev.attr("data-elIndex"), 10));
 
 		        //animate
 		        animations.animateSlide(current, prev, startPos, opts.slideEffect, false, callback);
@@ -186,6 +199,39 @@
 			            callback();
 		            }
 		        });
+		    },
+
+		    slideToElement : function(element, callback){
+		    	if (slideshowRunning) {
+		            return;
+		        }
+
+		    	var current = slideshowContainer.children("." + opts.activeClass);
+
+		    	slideshowRunning = true;
+
+		    	element.addClass("next");
+
+
+		        animations.slideNext(current, element, function () {
+		            current.removeClass(opts.activeClass).addClass(opts.notActiveClass);
+		            element.addClass(opts.activeClass).removeClass("next").removeClass(opts.notActiveClass);
+		            slideshowRunning = false;
+
+		            if(typeof callback !== "undefined"){
+			            callback();
+		            }
+		        });
+		    },
+
+		    setActivePagination : function(index){
+		    	if(opts.pagination){
+		    		var lis = opts.paginationUl.children();
+			    	lis.removeClass(opts.activeClass).addClass(opts.notActiveClass);
+
+			    	$(lis[index]).addClass(opts.activeClass).removeClass(opts.notActiveClass);
+		    	}
+		    	
 		    }
 		};
 
@@ -207,6 +253,9 @@
 		    			controlFunctions.start();
 		    		});
 		    	}, opts.interval);
+		    },
+		    stop : function(){
+		    	clearTimeout(slideshowTimer);
 		    }
 		};
 
@@ -216,64 +265,149 @@
 
 
 		//********** INIT********//
-
-
-		var initNavigation = function(){
-			if(!isEmpty(opts.nextButton)){
-				opts.nextButton.click(function(){
-					animations.runSlideshowNext();
-				});
-			}
-
-			if(!isEmpty(opts.previousButton)){
-				opts.previousButton.click(function(){
-					animations.runSlideshowPrev();
-				});
-			}
-		}
-
-		var initSlideShow = function(){
-
-			var allElements = slideshowContainer.children();
-
-			//only run slideshow if it is more then one slides
-			if(allElements.length > 1){
-				var currentEl = slideshowContainer.children("div:first");
-				var otherEl = slideshowContainer.children("div").not(currentEl);
-
-				//slide show container styles
-				if(slideshowContainer.css("position") == "static"){
-					slideshowContainer.css("position", "relative");
+		var initFunctions = {
+			
+			initNavigation : function(show){
+				if(!isEmpty(opts.nextButton)){
+					if(show){
+						opts.nextButton.click(function(){
+							if(opts.auto){
+								controlFunctions.stop();
+								animations.runSlideshowNext(function(){
+									controlFunctions.start();
+								});
+							}else{
+								animations.runSlideshowNext();
+							}
+						});
+					}else{
+						opts.nextButton.hide();
+					}
+					
 				}
 
-				//set common style on all slides
-				allElements.css("position", "absolute");
-				allElements.width(slideshowContainer.width());
+				if(!isEmpty(opts.previousButton)){
+					if(show){
+						opts.previousButton.click(function(){
+							if(opts.auto){
+								controlFunctions.stop();
+								animations.runSlideshowPrev(function(){
+									controlFunctions.start();
+								});
+							}else{
+								animations.runSlideshowPrev();
+							}
+						});
+					}else{
+						opts.previousButton.hide();
+					}
+					
+				}
+			},
 
-				//set active element
-				currentEl.addClass(opts.activeClass);
-				currentEl.css("left", 0);
+			initPagination : function(){
+				if(opts.pagination){
+					if(isEmpty(opts.paginationUl)){
+						var tmpPaginationContainer = $("<ul class='pagination' />");
+						el.after(tmpPaginationContainer);
+						opts.paginationUl = tmpPaginationContainer;
+					}
+				}
 
-				//set inactive
-				otherEl.addClass(opts.notActiveClass);
-				otherEl.hide();
+				el.children().each(function(index, elm){
+					var element = $(elm);
 
-				//slide area style
-				opts.slideArea.css("overflow", "hidden");
+					var li = $("<li></li>").attr("data-elIndex", index);
+					
+					if(element.hasClass(opts.activeClass)){
+						li.addClass(opts.activeClass);
+					}else{
+						li.addClass(opts.notActiveClass);
+					}
 
-				//reset style
-				//$("html, body").css("overflow", "hidden");
+					li.appendTo(opts.paginationUl);
 
-				//start slide show
-				if(opts.auto){
-					controlFunctions.start();	
+
+					li.click(function(){
+						var currLi = $(this);
+						var slideToElementIndex = currLi.attr("data-elIndex");
+						var slideToIndex = parseInt(slideToElementIndex, 10);
+						var slide = slideshowContainer.children().eq(slideToIndex);
+
+						if(slide.hasClass(opts.activeClass)){
+							return;
+						}
+
+						if(opts.auto){
+							controlFunctions.stop();
+							animations.slideToElement(slide, function(){
+								controlFunctions.start();
+							});
+
+						}else{
+							animations.slideToElement(slide);
+						}
+						
+
+					})
+				});
+			},
+
+			initSlideShow : function(){
+
+				var allElements = slideshowContainer.children();
+
+				//only run slideshow if it is more then one slides
+				if(allElements.length > 1){
+
+					allElements.each(function(index, elem){
+						$(elem).attr("data-elIndex", index);
+					});
+
+					var currentEl = slideshowContainer.children("div:first");
+					var otherEl = slideshowContainer.children("div").not(currentEl);
+
+					//slide show container styles
+					if(slideshowContainer.css("position") == "static"){
+						slideshowContainer.css("position", "relative");
+					}
+
+					//set common style on all slides
+					allElements.css("position", "absolute");
+					allElements.width(slideshowContainer.width());
+
+					//set active element
+					currentEl.addClass(opts.activeClass);
+					currentEl.css("left", 0);
+
+					//set inactive
+					otherEl.addClass(opts.notActiveClass);
+					otherEl.hide();
+
+					//slide area style
+					opts.slideArea.css("overflow", "hidden");
+
+					//reset style
+					//$("html, body").css("overflow", "hidden");
+
+					//start slide show
+					if(opts.auto){
+						controlFunctions.start();	
+					}
+
+					initFunctions.initNavigation(true);
+					initFunctions.initPagination();
+
+				}else{
+					initFunctions.initNavigation(false);
 				}
 			}
-
 		};
+		
 
-		initSlideShow();
-		initNavigation();
+		initFunctions.initSlideShow();
+		
+		
 
 		//********** END INIT ********//
 	};

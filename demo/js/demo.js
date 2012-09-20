@@ -1,6 +1,6 @@
 (function(namespace){
 	namespace.initSlideshow = function(){
-		$("#normalContainer").slideit({"slideArea" : $("#normalContainer"), "nextButton" : $(".nextB"), "previousButton" : $(".prevB"), "auto" : false});
+		$("#normalContainer").slideit({"slideArea" : $("#normalContainer"), "nextButton" : $(".nextB"), "previousButton" : $(".prevB"), "pagination" : true});
 
 
 		// $("#wideContainer").slideit({"slideArea" : $("#wideContainer")});
