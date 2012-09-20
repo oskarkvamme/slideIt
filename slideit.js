@@ -3,8 +3,6 @@
 
 
 		//********** PRIVATE VARIABLES ********//
-		var plugin = this;
-
 		var el = $(this);
 
 		var slideshowContainer = el;
@@ -26,7 +24,9 @@
 			slideArea: slideshowContainer,
 			activeClass: "active",
 			notActiveClass : "notActive",
-			slideEffect : "slide"
+			slideEffect : "slide",
+			nextButton : {},
+			previousButton : {}
 		};
 
 		var opts = $.extend(defaults, options);
@@ -34,8 +34,15 @@
 		//********** END SETTINGS ************//
 
 
-
 		//********** RENDER FUNCTIONS ********//
+
+		var isEmpty = function (ob){
+   			
+   			for(var i in ob){ 
+   				return false;
+   			}
+			return true;
+		};
 
 		var animations = {
 			animateSlide : function(current, next, startPos, effect, direction, callback){
@@ -143,11 +150,12 @@
 		            nextEl.addClass(opts.activeClass).removeClass("next").removeClass(opts.notActiveClass);
 		            slideshowRunning = false;
 
-		            callback();
+		            if(typeof callback !== "undefined"){
+			            callback();
+		            }
 		        });
 		    },
 		    runSlideshowPrev: function (callback) {
-
 		        //do nothing if it is already animating
 		        if (slideshowRunning) {
 		            return;
@@ -171,10 +179,12 @@
 		        animations.slidePrev(current, prevEl, function () {
 
 		            current.removeClass(opts.activeClass).addClass(opts.notActiveClass);
-		            prevEl.addClass(opts.activeClass).removeClass("prev").removeClass(opts.activeClass);
+		            prevEl.addClass(opts.activeClass).removeClass("prev").removeClass(opts.notActiveClass);
 		            slideshowRunning = false;
 
-		            callback();
+		            if(typeof callback !== "undefined"){
+			            callback();
+		            }
 		        });
 		    }
 		};
@@ -197,18 +207,6 @@
 		    			controlFunctions.start();
 		    		});
 		    	}, opts.interval);
-		    },
-
-		    stop : function(){
-		    	clearTimeout(slideshowTimer);
-		    },
-
-		    next : function(){
-		    	console.log("next");
-		    },
-
-		    prev : function(){
-				console.log("prev");
 		    }
 		};
 
@@ -218,6 +216,21 @@
 
 
 		//********** INIT********//
+
+
+		var initNavigation = function(){
+			if(!isEmpty(opts.nextButton)){
+				opts.nextButton.click(function(){
+					animations.runSlideshowNext();
+				});
+			}
+
+			if(!isEmpty(opts.previousButton)){
+				opts.previousButton.click(function(){
+					animations.runSlideshowPrev();
+				});
+			}
+		}
 
 		var initSlideShow = function(){
 
@@ -260,6 +273,7 @@
 		};
 
 		initSlideShow();
+		initNavigation();
 
 		//********** END INIT ********//
 	};

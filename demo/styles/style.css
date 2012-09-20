@@ -18,32 +18,15 @@ h1, h2{
 	width: 800px;
 	height: 505px;
 }
-
-#wideContainer{
-	width: 100%;
-	height: 400px;
+.prevB{
+	width: 50px;
+	height: 50px;
+	background-color: blue;
 }
 
-#wideContainer div{
-	height: 100%;
-	width: 100%;
-}
-
-
-#tress{
-	width: 100%;
-	background-color: black;
-	height: 492px;
-}
-
-#tress .pageContainer{
-	position: relative;
-	width: 960px;
-	margin: 0 auto;
-}
-
-#tress .pageContainer .container{
-	width: 2036px;
-	position: absolute;
-	left: -538px;
+.nextB{
+	margin-top: 20px;
+	width: 50px;
+	height: 50px;
+	background-color: red;
 }
